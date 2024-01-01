@@ -38,19 +38,21 @@ public class Button extends JButton {
 
    
 
-    private int round = 15;
+    private int round = 30;
     private Color shadowColor = new Color(170, 170, 170);
     private BufferedImage imageShadow;
     private final Insets shadowSize = new Insets(2, 5, 8, 5);
     
 
     public Button() {
-        setBorder(new EmptyBorder(10, 12, 15, 12));
+        
         setContentAreaFilled(false);
-        setBackground(new Color(255, 105, 105));
-        setForeground(new Color(80, 80, 80));
-        setShadowColor(new Color(2, 2, 5));
-    }
+        setBackground( new Color(252,244,200));
+        setForeground(new Color(114,69,45)); 
+        setBorder(new EmptyBorder(10, 30, 10, 30));
+        setShadowColor(new Color(170, 170, 170, 100));
+      setBounds(0,0 ,0 ,0 );
+        }
 
     @Override
     protected void paintComponent(Graphics grphcs) {

@@ -8,10 +8,11 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Random;
 
-public class quiz extends JFrame {
+public class quiz {
 
     private JLabel questionLabel, resultatLabel, scoreLabel, tempsRestantLabel;
-    private Button[] choixButtons;
+    private JFrame q;
+    private Button[] choixButtons, fakebuttons;
     private int niveau;
     private int play;
     private int score;
@@ -21,167 +22,197 @@ public class quiz extends JFrame {
     private Timer chrono; // Timer pour le chronomètre7
     private int tempsRestant; // Temps restant en secondes
     private JPanel topPanel;
-    public Clip timer,error,correct;
-String[] niveaux = {"Facile", "Difficile"};
+    public Clip timer, error, correct;
+
+    String[] niveaux = { "Facile", "Difficile" };
+
     public quiz(String titre) {
- super(titre);
-  setDefaultCloseOperation(quiz.EXIT_ON_CLOSE);
-   try {
-         
-           File fontFile = new File("/home/djalal/Desktop/javaa/ihmproject/Fonts/Playtime.otf");
+
+        try {
+
+            File fontFile = new File("/home/djalal/Desktop/javaa/ihmproject/Fonts/Playtime.otf");
             Font playf = Font.createFont(Font.TRUETYPE_FONT, fontFile).deriveFont(50f);
 
-            
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
             ge.registerFont(playf);
 
+            q = new JFrame("test");
+
+            ImageIcon imageIcon = new ImageIcon(quiz.this.getClass().getResource("Happy Morning Animation.gif"));
+
+            JLabel background = new JLabel(imageIcon);
+
+            imageIcon.setImageObserver(background);
+
+            q.setContentPane(background);
+            q.setLayout(new BorderLayout());
+            q.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            q.setResizable(false);
+
+            // Demander le niveau à l'utilisateur
+
+            niveau = JOptionPane.showOptionDialog(null, "Choisissez le niveau", "Niveau", JOptionPane.DEFAULT_OPTION,
+                    JOptionPane.QUESTION_MESSAGE, null, niveaux, niveaux[0]) + 1;
+
+            // Initialisation des composants
+
+            questionLabel = new JLabel();
+            questionLabel.setFont(playf);
+            resultatLabel = new JLabel();
+
+            scoreLabel = new JLabel("Score: 0");
+            tempsRestantLabel = new JLabel();
+            choixButtons = new Button[4];
+            fakebuttons = new Button[6];
+              for (int i = 0; i < 6; i++) {
+                fakebuttons[i] = new Button();
+                    fakebuttons[i].setVisible(false);
+
+            }
+            for (int i = 0; i < 4; i++) {
+
+                choixButtons[i] = new Button();
+
+                choixButtons[i].setFont(playf);
+                choixButtons[i].setPreferredSize(new Dimension(0, 0));
+
+            }
+
+            // Configuration de l'interface
+
+            // Panel for the top section (Question number, Timer, Score)
+
+            topPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+            topPanel.add(new JLabel("Question: " + numQuestion));
+            if (niveau == 2) {
+                topPanel.add(tempsRestantLabel);
+            }
+            topPanel.add(scoreLabel);
+
+            // Panel for the center section (Question, Result, and Choices)
+            JPanel centerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+            centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
+
+            // Panel for the question
+            JPanel questionPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+            questionPanel.add(questionLabel);
+            questionPanel.setSize(20, 20);
+            centerPanel.add(questionPanel);
+            questionPanel.setOpaque(false);
+
+            // Panel for the choices
+            JPanel choicesPanel = new JPanel(new GridLayout(2, 4));
            
-       
-
-       
-
-        // Demander le niveau à l'utilisateur
-      
- 
-        niveau = JOptionPane.showOptionDialog(null, "Choisissez le niveau", "Niveau", JOptionPane.DEFAULT_OPTION,
-                JOptionPane.QUESTION_MESSAGE, null, niveaux, niveaux[0]) + 1;
-                
-        // Initialisation des composants
-     
-        questionLabel = new JLabel();
-        questionLabel.setFont(playf); 
-        resultatLabel = new JLabel();
-        
-        scoreLabel = new JLabel("Score: 0");
-        tempsRestantLabel = new JLabel();
-        choixButtons = new Button[4];
-        for (int i = 0; i < 4; i++) {
-
-            choixButtons[i] = new Button ();
-          choixButtons[i].setRound(20);
-            choixButtons[i].setFont(playf); 
-         
             
-             
-        }
+           
+                choicesPanel.add(fakebuttons[0]);
+                choicesPanel.add(choixButtons[0]);
+                choicesPanel.add(fakebuttons[1]);
+                choicesPanel.add(choixButtons[1]);
+                choicesPanel.add(fakebuttons[2]);
+                choicesPanel.add(fakebuttons[3]);
+                choicesPanel.add(choixButtons[2]);
+               choicesPanel.add(fakebuttons[4]);
+                choicesPanel.add(choixButtons[3]);
+                choicesPanel.add(fakebuttons[5]);
+         
 
-        // Configuration de l'interface
-        setLayout(new BorderLayout());
+            centerPanel.add(choicesPanel);
 
-        // Panel for the top section (Question number, Timer, Score)
-        topPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        topPanel.add(new JLabel("Question: " + numQuestion));
-        if (niveau == 2) {
-            topPanel.add(tempsRestantLabel);
-        }
-        topPanel.add(scoreLabel);
-        add(topPanel, BorderLayout.NORTH);
-        topPanel.setBackground(new Color(255, 245, 224));
+            // Panel for the result
+            JPanel resultPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+            resultPanel.add(resultatLabel);
+            centerPanel.add(resultPanel);
+            resultPanel.setOpaque(false);
 
-        // Panel for the center section (Question, Result, and Choices)
-        JPanel centerPanel = new JPanel();
-        centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
-        centerPanel.setBackground(new Color(255, 245, 224));
+            // Panel for the bottom section (Result)
+            JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+            bottomPanel.add(resultatLabel);
+            topPanel.setOpaque(false);
+            bottomPanel.setOpaque(false);
+            centerPanel.setOpaque(false);
 
-        // Panel for the question
-        JPanel questionPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        questionPanel.add(questionLabel);
-        centerPanel.add(questionPanel);
-        questionPanel.setBackground(new Color(255, 245, 224));
+            q.add(topPanel, BorderLayout.NORTH);
+            q.add(centerPanel, BorderLayout.CENTER);
+            q.add(bottomPanel, BorderLayout.SOUTH);
+            q.setVisible(true);
 
-        // Panel for the choices
-        JPanel choicesPanel = new JPanel(new GridLayout(2, 2));
-        for (int i = 0; i < 4; i++) {
-            choicesPanel.add(choixButtons[i]);
-        }
-        centerPanel.add(choicesPanel);
-questionPanel.setBackground(new Color(255, 245, 224));
-
-        // Panel for the result
-        JPanel resultPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        resultPanel.add(resultatLabel);
-        centerPanel.add(resultPanel);
-        resultPanel.setBackground(new Color(255, 245, 224));
-        add(centerPanel, BorderLayout.CENTER);
-
-        // Panel for the bottom section (Result)
-        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        bottomPanel.add(resultatLabel);
-        add(bottomPanel, BorderLayout.SOUTH);
-        bottomPanel.setBackground(new Color(255, 245, 224));
-
-        // Ajout du label et du chronomètre seulement pour le niveau difficile
-        if (niveau == 2) {
-            tempsRestantLabel.setText("Temps restant: ");
-            chrono = new Timer(1000, new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    tempsRestant--;
-                    tempsRestantLabel.setText("Temps restant: " + tempsRestant + "s");
-                    if (tempsRestant==4) {
-                        timer=playSound("/home/djalal/Desktop/javaa/ihmproject/Sounds/mixkit-tick-tock-clock-timer-1045.wav",timer);
+            // Ajout du label et du chronomètre seulement pour le niveau difficile
+            if (niveau == 2) {
+                tempsRestantLabel.setText("Temps restant: ");
+                chrono = new Timer(1000, new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        tempsRestant--;
+                        tempsRestantLabel.setText("Temps restant: " + tempsRestant + "s");
+                        if (tempsRestant == 4) {
+                            timer = playSound(
+                                    "/home/djalal/Desktop/javaa/ihmproject/Sounds/mixkit-tick-tock-clock-timer-1045.wav",
+                                    timer);
+                        }
+                        if (tempsRestant <= 0) {
+                            resultatLabel.setText("Temps écoulé. La réponse correcte est : " + reponseCorrecte);
+                            stopChrono();
+                            stopSound(timer);
+                            initialiserJeu();
+                        }
                     }
-                    if (tempsRestant <= 0) {
-                        resultatLabel.setText("Temps écoulé. La réponse correcte est : " + reponseCorrecte);
-                        stopChrono();
-                        stopSound(timer);
-                        initialiserJeu();
+                });
+            }
+
+            // Gestionnaire d'événements pour les boutons de choix
+            for (int i = 0; i < 4; i++) {
+                final int choix = i;
+                choixButtons[i].addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        verifierReponse(choix);
                     }
-                }
-            });
-        }
+                });
+            }
 
-        // Gestionnaire d'événements pour les boutons de choix
-        for (int i = 0; i < 4; i++) {
-            final int choix = i;
-            choixButtons[i].addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    verifierReponse(choix);
-                }
-            });
-        }
- 
+            choicesPanel.setVisible(true);
 
-    
+            choicesPanel.setOpaque(false);
+            // Initialisation du jeu
+            initialiserJeu();
 
-        // Initialisation du jeu
-        initialiserJeu();
+            // Affichage de la fenêtre
+            q.pack();
+            q.setLocationRelativeTo(null); // Center the frame on the screen
 
-        // Affichage de la fenêtre
-        pack();
-        setLocationRelativeTo(null); // Center the frame on the screen
-        
-        setVisible(true);  
-      
- } catch (IOException | FontFormatException e) {
+            q.setVisible(true);
+
+        } catch (IOException | FontFormatException e) {
             e.printStackTrace();
         }
     }
 
-    private void initialiserJeu() {
-         
+    public void initialiserJeu() {
+
         if (numQuestion >= 10) {
             // Afficher un message de fin du jeu
-            if(score >= 5){
-                JOptionPane.showMessageDialog(null, "Fin du jeu, vous avez gagner! Votre score final est : " + score, "Fin du jeu", JOptionPane.INFORMATION_MESSAGE);
+            if (score >= 5) {
+                JOptionPane.showMessageDialog(null, "Fin du jeu, vous avez gagner! Votre score final est : " + score,
+                        "Fin du jeu", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(null, "Fin du jeu, vous avez perdu! Votre score final est : " + score,
+                        "Fin du jeu", JOptionPane.INFORMATION_MESSAGE);
             }
-            else{
-                JOptionPane.showMessageDialog(null, "Fin du jeu, vous avez perdu! Votre score final est : " + score, "Fin du jeu", JOptionPane.INFORMATION_MESSAGE);
+            String[] playagain = { "Rejouer", "Quitter" };
+            play = JOptionPane.showOptionDialog(null, "Choisissez le niveau", "Niveau", JOptionPane.DEFAULT_OPTION,
+                    JOptionPane.QUESTION_MESSAGE, null, playagain, playagain[0]) + 1;
+            if (play == 1) {
+                score = 0;
+                numQuestion = 0;
+                niveau = JOptionPane.showOptionDialog(null, "Choisissez le niveau", "Niveau",
+                        JOptionPane.DEFAULT_OPTION,
+                        JOptionPane.QUESTION_MESSAGE, null, niveaux, niveaux[0]) + 1;
+                initialiserJeu();
+
+            } else {
+                System.exit(0);
             }
-             String[] playagain = {"Rejouer", "Quitter"};
-        play = JOptionPane.showOptionDialog(null, "Choisissez le niveau", "Niveau", JOptionPane.DEFAULT_OPTION,
-                JOptionPane.QUESTION_MESSAGE, null, playagain, playagain[0]) + 1;
-                if (play == 1) {
-                    score = 0;
-                    numQuestion = 0;
-                     niveau = JOptionPane.showOptionDialog(null, "Choisissez le niveau", "Niveau", JOptionPane.DEFAULT_OPTION,
-                JOptionPane.QUESTION_MESSAGE, null, niveaux, niveaux[0]) + 1;
-                    initialiserJeu();
-                    
-                } else {
-                    System.exit(0);
-                }
         }
 
         // Incrémenter le numéro de la question
@@ -195,7 +226,7 @@ questionPanel.setBackground(new Color(255, 245, 224));
             operateur = (random.nextInt(2) == 0) ? '+' : '-';
         } else {
             nombre1 = random.nextInt(10);
-            nombre2 = random.nextInt(9)+1;
+            nombre2 = random.nextInt(9) + 1;
             operateur = getOperateur(random.nextInt(4));
             tempsRestant = 10; // Changer la valeur du temps pour le niveau difficile
             tempsRestantLabel.setText("Temps restant: " + tempsRestant + "s");
@@ -206,7 +237,8 @@ questionPanel.setBackground(new Color(255, 245, 224));
         reponseCorrecte = calculerReponse();
 
         // Affichage de la question
-        questionLabel.setText("Question " + numQuestion + ": Combien font " + nombre1 + " " + operateur + " " + nombre2 + "?");
+        questionLabel.setText(
+                "Question " + numQuestion + ": Combien font " + nombre1 + " " + operateur + " " + nombre2 + "?");
 
         // Génération de choix aléatoires pour les boutons
         int reponseCorrecteIndex = random.nextInt(4);
@@ -226,13 +258,14 @@ questionPanel.setBackground(new Color(255, 245, 224));
     private void verifierReponse(int choix) {
         if (choixButtons[choix].getText().equals(String.valueOf(reponseCorrecte))) {
             resultatLabel.setText("Correct!");
-            playSound("/home/djalal/Desktop/javaa/ihmproject/Sounds/mixkit-correct-answer-notification-947.wav",correct);
+            playSound("/home/djalal/Desktop/javaa/ihmproject/Sounds/mixkit-correct-answer-notification-947.wav",
+                    correct);
 
             score++;
             stopSound(timer);
         } else {
             resultatLabel.setText("Incorrect. La réponse correcte est : " + reponseCorrecte);
-            playSound("/home/djalal/Desktop/javaa/ihmproject/Sounds/mixkit-click-error-1110.wav",error);
+            playSound("/home/djalal/Desktop/javaa/ihmproject/Sounds/mixkit-click-error-1110.wav", error);
             stopSound(timer);
         }
 
@@ -257,7 +290,7 @@ questionPanel.setBackground(new Color(255, 245, 224));
     }
 
     private char getOperateur(int index) {
-        char[] operateurs = {'+', '-', '*', '/'};
+        char[] operateurs = { '+', '-', '*', '/' };
         return operateurs[index];
     }
 
@@ -279,26 +312,28 @@ questionPanel.setBackground(new Color(255, 245, 224));
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> new quiz("Jeu de Maths"));
     }
-     public static int stopSound(Clip ssd){
-          if (ssd == null) {
-            return 0 ; 
-          }
-        ssd.stop();
-            return 0 ;
+
+    public static int stopSound(Clip ssd) {
+        if (ssd == null) {
+            return 0;
         }
-     public static Clip playSound(String soundFilePath,Clip sd) {
+        ssd.stop();
+        return 0;
+    }
+
+    public static Clip playSound(String soundFilePath, Clip sd) {
         try {
-         sd = AudioSystem.getClip();
-           
-            
+            sd = AudioSystem.getClip();
+
             sd.open(AudioSystem.getAudioInputStream(new File(soundFilePath)));
             sd.start();
-            return sd ;
+            return sd;
         } catch (Exception e) {
             e.printStackTrace();
-            return sd ; 
+            return sd;
 
         }
-       
+
     }
+
 }
