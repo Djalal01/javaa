@@ -30,7 +30,7 @@ public class quiz {
 
         try {
 
-            File fontFile = new File("/home/djalal/Desktop/javaa/ihmproject/Fonts/Playtime.otf");
+            File fontFile = new File("Fonts/Playtime.otf");
             Font playf = Font.createFont(Font.TRUETYPE_FONT, fontFile).deriveFont(50f);
 
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
@@ -38,7 +38,7 @@ public class quiz {
 
             q = new JFrame("test");
 
-            ImageIcon imageIcon = new ImageIcon(quiz.this.getClass().getResource("Happy Morning Animation.gif"));
+            ImageIcon imageIcon = new ImageIcon(quiz.this.getClass().getResource("images/Happy Morning Animation.gif"));
 
             JLabel background = new JLabel(imageIcon);
 
@@ -147,7 +147,7 @@ public class quiz {
                         tempsRestantLabel.setText("Temps restant: " + tempsRestant + "s");
                         if (tempsRestant == 4) {
                             timer = playSound(
-                                    "/home/djalal/Desktop/javaa/ihmproject/Sounds/mixkit-tick-tock-clock-timer-1045.wav",
+                                    "Sounds/mixkit-tick-tock-clock-timer-1045.wav",
                                     timer);
                         }
                         if (tempsRestant <= 0) {
@@ -258,14 +258,14 @@ public class quiz {
     private void verifierReponse(int choix) {
         if (choixButtons[choix].getText().equals(String.valueOf(reponseCorrecte))) {
             resultatLabel.setText("Correct!");
-            playSound("/home/djalal/Desktop/javaa/ihmproject/Sounds/mixkit-correct-answer-notification-947.wav",
+            playSound("Sounds/mixkit-correct-answer-notification-947.wav",
                     correct);
 
             score++;
             stopSound(timer);
         } else {
             resultatLabel.setText("Incorrect. La réponse correcte est : " + reponseCorrecte);
-            playSound("/home/djalal/Desktop/javaa/ihmproject/Sounds/mixkit-click-error-1110.wav", error);
+            playSound("Sounds/mixkit-click-error-1110.wav", error);
             stopSound(timer);
         }
 
