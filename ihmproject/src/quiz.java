@@ -1,6 +1,9 @@
+
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.swing.*;
+import javax.swing.border.Border;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -8,10 +11,20 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Random;
 
-public class quiz {
+public class quiz extends JPanel {
+    public static class JFRAME extends JFrame {
+        public JFRAME() {
+            super("Jeu pour enfant!");
+            setSize(800, 600);
+            setLocationRelativeTo(null);
+            setVisible(true);
+            setDefaultCloseOperation(EXIT_ON_CLOSE);
+            setResizable(false);
+        }
+    }
 
     private JLabel questionLabel, resultatLabel, scoreLabel, tempsRestantLabel;
-    private JFrame q;
+    JFRAME q = new JFRAME();
     private Button[] choixButtons, fakebuttons;
     private int niveau;
     private int play;
@@ -19,10 +32,12 @@ public class quiz {
     private int nombre1, nombre2, reponseCorrecte;
     private char operateur;
     private int numQuestion;
-    private Timer chrono; // Timer pour le chronomètre7
+    public Timer chrono; // Timer pour le chronomètre7
     private int tempsRestant; // Temps restant en secondes
     private JPanel topPanel;
     public Clip timer, error, correct;
+    private static CardLayout CardLayout = new CardLayout();
+    private static JPanel container = new JPanel(CardLayout);
 
     String[] niveaux = { "Facile", "Difficile" };
 
@@ -36,8 +51,8 @@ public class quiz {
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
             ge.registerFont(playf);
 
-            q = new JFrame("test");
-
+            // Initialisation de l'interface
+           JPanel panel = new JPanel();
             ImageIcon imageIcon = new ImageIcon(quiz.this.getClass().getResource("images/Happy Morning Animation.gif"));
 
             JLabel background = new JLabel(imageIcon);
@@ -51,8 +66,38 @@ public class quiz {
 
             // Demander le niveau à l'utilisateur
 
-            niveau = JOptionPane.showOptionDialog(null, "Choisissez le niveau", "Niveau", JOptionPane.DEFAULT_OPTION,
-                    JOptionPane.QUESTION_MESSAGE, null, niveaux, niveaux[0]) + 1;
+            JPanel startpanel = Creatstart();
+
+            panel.setOpaque(false);
+
+            JButton startButton = new JButton("Facile");
+            JButton startButton2 = new JButton("Difficile");
+
+            // button facile
+            startButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    numQuestion = 0;
+                    niveau = 1;
+                    initialiserJeu();
+                    CardLayout.show(container, "panelall");
+
+                }
+            });
+            // button difficile
+            startButton2.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    numQuestion = 0;
+                    niveau = 2;
+
+                    initialiserJeu();
+
+                    CardLayout.show(container, "panelall");
+
+                }
+
+            });
 
             // Initialisation des composants
 
@@ -64,9 +109,9 @@ public class quiz {
             tempsRestantLabel = new JLabel();
             choixButtons = new Button[4];
             fakebuttons = new Button[6];
-              for (int i = 0; i < 6; i++) {
+            for (int i = 0; i < 6; i++) {
                 fakebuttons[i] = new Button();
-                    fakebuttons[i].setVisible(false);
+                fakebuttons[i].setVisible(false);
 
             }
             for (int i = 0; i < 4; i++) {
@@ -83,10 +128,8 @@ public class quiz {
             // Panel for the top section (Question number, Timer, Score)
 
             topPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-            topPanel.add(new JLabel("Question: " + numQuestion));
-            if (niveau == 2) {
-                topPanel.add(tempsRestantLabel);
-            }
+            topPanel.add(new JLabel("Question: " + (numQuestion - 1)));
+
             topPanel.add(scoreLabel);
 
             // Panel for the center section (Question, Result, and Choices)
@@ -102,42 +145,51 @@ public class quiz {
 
             // Panel for the choices
             JPanel choicesPanel = new JPanel(new GridLayout(2, 4));
-           
-            
-           
-                choicesPanel.add(fakebuttons[0]);
-                choicesPanel.add(choixButtons[0]);
-                choicesPanel.add(fakebuttons[1]);
-                choicesPanel.add(choixButtons[1]);
-                choicesPanel.add(fakebuttons[2]);
-                choicesPanel.add(fakebuttons[3]);
-                choicesPanel.add(choixButtons[2]);
-               choicesPanel.add(fakebuttons[4]);
-                choicesPanel.add(choixButtons[3]);
-                choicesPanel.add(fakebuttons[5]);
-         
+
+            choicesPanel.add(fakebuttons[0]);
+            choicesPanel.add(choixButtons[0]);
+            choicesPanel.add(fakebuttons[1]);
+            choicesPanel.add(choixButtons[1]);
+            choicesPanel.add(fakebuttons[2]);
+            choicesPanel.add(fakebuttons[3]);
+            choicesPanel.add(choixButtons[2]);
+            choicesPanel.add(fakebuttons[4]);
+            choicesPanel.add(choixButtons[3]);
+            choicesPanel.add(fakebuttons[5]);
 
             centerPanel.add(choicesPanel);
+            // imodaskdoisandas
 
             // Panel for the result
             JPanel resultPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+            JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+            JPanel panelall = new JPanel();
+            panelall.setLayout(new BorderLayout());
+            panelall.add(centerPanel, BorderLayout.CENTER);
+            panelall.add(topPanel, BorderLayout.NORTH);
+            panelall.add(bottomPanel, BorderLayout.SOUTH);
             resultPanel.add(resultatLabel);
             centerPanel.add(resultPanel);
             resultPanel.setOpaque(false);
 
-            // Panel for the bottom section (Result)
-            JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-            bottomPanel.add(resultatLabel);
             topPanel.setOpaque(false);
             bottomPanel.setOpaque(false);
             centerPanel.setOpaque(false);
+            panelall.setOpaque(false);
+            // Panel for the bottom section (Result)
 
-            q.add(topPanel, BorderLayout.NORTH);
-            q.add(centerPanel, BorderLayout.CENTER);
-            q.add(bottomPanel, BorderLayout.SOUTH);
-            q.setVisible(true);
+            bottomPanel.add(resultatLabel);
+            panel.add(startButton);
+            panel.add(startButton2);
+            container.add(startpanel,"start");
+            container.add(panel, "panel");
+            container.add(panelall, "panelall");
+            container.setOpaque(false);
+
+            q.add(container);
 
             // Ajout du label et du chronomètre seulement pour le niveau difficile
+
             if (niveau == 2) {
                 tempsRestantLabel.setText("Temps restant: ");
                 chrono = new Timer(1000, new ActionListener() {
@@ -156,8 +208,10 @@ public class quiz {
                             stopSound(timer);
                             initialiserJeu();
                         }
+
                     }
                 });
+
             }
 
             // Gestionnaire d'événements pour les boutons de choix
@@ -189,30 +243,14 @@ public class quiz {
     }
 
     public void initialiserJeu() {
+        if (niveau == 2) {
+
+            topPanel.add(tempsRestantLabel);
+        }
 
         if (numQuestion >= 10) {
             // Afficher un message de fin du jeu
-            if (score >= 5) {
-                JOptionPane.showMessageDialog(null, "Fin du jeu, vous avez gagner! Votre score final est : " + score,
-                        "Fin du jeu", JOptionPane.INFORMATION_MESSAGE);
-            } else {
-                JOptionPane.showMessageDialog(null, "Fin du jeu, vous avez perdu! Votre score final est : " + score,
-                        "Fin du jeu", JOptionPane.INFORMATION_MESSAGE);
-            }
-            String[] playagain = { "Rejouer", "Quitter" };
-            play = JOptionPane.showOptionDialog(null, "Choisissez le niveau", "Niveau", JOptionPane.DEFAULT_OPTION,
-                    JOptionPane.QUESTION_MESSAGE, null, playagain, playagain[0]) + 1;
-            if (play == 1) {
-                score = 0;
-                numQuestion = 0;
-                niveau = JOptionPane.showOptionDialog(null, "Choisissez le niveau", "Niveau",
-                        JOptionPane.DEFAULT_OPTION,
-                        JOptionPane.QUESTION_MESSAGE, null, niveaux, niveaux[0]) + 1;
-                initialiserJeu();
-
-            } else {
-                System.exit(0);
-            }
+            replay();
         }
 
         // Incrémenter le numéro de la question
@@ -230,7 +268,7 @@ public class quiz {
             operateur = getOperateur(random.nextInt(4));
             tempsRestant = 10; // Changer la valeur du temps pour le niveau difficile
             tempsRestantLabel.setText("Temps restant: " + tempsRestant + "s");
-            startChrono();
+
         }
 
         // Calcul de la réponse correcte
@@ -299,7 +337,7 @@ public class quiz {
         return random.nextInt(20); // Modifiez la limite selon vos besoins
     }
 
-    private void startChrono() {
+    public void startChrono() {
         chrono.start();
     }
 
@@ -321,6 +359,36 @@ public class quiz {
         return 0;
     }
 
+    private void replay() {
+        JPanel replay = new JPanel();
+        JButton replayButton = new JButton("Rejouer");
+        JButton exitButton = new JButton("Quitter");
+        if (score < 5) {
+            JLabel loss = new JLabel("FIN DE JEU VOUS AVEZ PERDU VOTRE SCORE: " + score);
+            replay.add(loss);
+
+        } else {
+            JLabel win = new JLabel("FIN DE JEU VOUS AVEZ GAGNER VOTRE SCORE: " + score);
+            replay.add(win);
+        }
+        replay.add(replayButton);
+        replay.add(exitButton);
+        container.add(replay, "replay");
+        CardLayout.show(container, "replay");
+
+        replayButton.addActionListener(e -> {
+            CardLayout.show(container, "panel");
+            score = 0;
+            numQuestion = 1;
+            initialiserJeu();
+
+        });
+        exitButton.addActionListener(e -> {
+            System.exit(0);
+        });
+
+    }
+
     public static Clip playSound(String soundFilePath, Clip sd) {
         try {
             sd = AudioSystem.getClip();
@@ -336,4 +404,113 @@ public class quiz {
 
     }
 
+    /////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////
+    // start panel
+    public JPanel Creatstart() {
+
+        JPanel firstJPanel = new JPanel(new CardLayout());
+        JPanel p = new JPanel(new BorderLayout());
+
+        firstJPanel.add(p);
+
+        JPanel northPanel = createPanel(Color.RED.darker(), 100, 50);
+        JPanel southPanel = createPanel(Color.RED.darker(), 300, 170);
+        JPanel eastPanel = createPanel(Color.RED.darker(), 200, 400);
+        JPanel westPanel = createPanel(Color.RED.darker(), 200, 400);
+        southPanel.setLayout(new FlowLayout());
+        eastPanel.setLayout(new FlowLayout());
+        westPanel.setLayout(new FlowLayout());
+        JLabel labil = new JLabel("bienvenue dans le jeu");
+        labil.setFont(new Font("SansSerif", Font.PLAIN, 30));
+        labil.setForeground(new Color(0, 0, 128).darker());
+        labil.setHorizontalAlignment(0);
+        northPanel.add(labil);
+        // dessin du bas
+        ImageIcon imageIcon2 = new ImageIcon(
+                "C:/Users/Client/jeu/javaa/javaa/ihmproject/src_2/Symmetry-removebg-preview.png");
+        Image image2 = imageIcon2.getImage();
+        Image resizedImage2 = image2.getScaledInstance(250, 150, Image.SCALE_SMOOTH);
+        ImageIcon resizedImageIcon2 = new ImageIcon(resizedImage2);
+        JLabel label2 = new JLabel(resizedImageIcon2);
+        // dessin du droite
+        ImageIcon imageIcon = new ImageIcon(
+                "C:/Users/Client/jeu/javaa/javaa/ihmproject/src_2/pngegg.png");
+        Image image = imageIcon.getImage();
+        Image resizedImage = image.getScaledInstance(190, 300, Image.SCALE_SMOOTH);
+        ImageIcon resizedImageIcon = new ImageIcon(resizedImage);
+        JLabel label = new JLabel(resizedImageIcon);
+        // dessin du gauche
+        ImageIcon imageIcon3 = new ImageIcon(
+                "C:/Users/Client/jeu/javaa/javaa/ihmproject/src_2/pngegg (1).png");
+        Image image3 = imageIcon3.getImage();
+        Image resizedImage3 = image3.getScaledInstance(150, 160, Image.SCALE_SMOOTH);
+        ImageIcon resizedImageIcon3 = new ImageIcon(resizedImage3);
+        JLabel label3 = new JLabel(resizedImageIcon3);
+        westPanel.add(label3);
+        eastPanel.add(label);
+        southPanel.add(label2);
+
+        p.add(northPanel, BorderLayout.NORTH);
+        p.add(southPanel, BorderLayout.SOUTH);
+        p.add(eastPanel, BorderLayout.EAST);
+        p.add(westPanel, BorderLayout.WEST);
+        p.add(createCentrPanel(), BorderLayout.CENTER);
+        return p;
+
+    }
+
+    public static JPanel createCentrPanel() {
+        JPanel panel = new JPanel();
+        panel.setLayout(null);
+        panel.setBackground(Color.red.darker());
+        ImageIcon imageIcon = new ImageIcon(
+                "C:/Users/Client/jeu/javaa/javaa/ihmproject/src_2/Screenshot_2023-12-23_131722-removebg-preview.png");
+        Image image = imageIcon.getImage();
+        Image resizedImage = image.getScaledInstance(50, 50, Image.SCALE_SMOOTH);
+        ImageIcon resizedImageIcon = new ImageIcon(resizedImage);
+
+        JButton b = new JButton("START!!");
+
+        b.setBounds(120, 200, 150, 50);
+        b.setBackground(new Color(255, 182, 193));
+        b.setFont(new Font("SansSerif", Font.PLAIN, 20));
+        b.setForeground(Color.RED.darker());
+        b.setOpaque(true);
+        b.setAlignmentX(0);
+
+        b.setMargin(new Insets(10, 0, 0, 10));
+        Border roundBorder = BorderFactory.createLineBorder(Color.black, 2, true);
+        b.setBorder(roundBorder);
+        b.addActionListener(e -> {
+            CardLayout.show(container, "panel");
+        });
+        JLabel label = new JLabel(resizedImageIcon);
+        label.setBounds(65, 180, 50, 50);
+        JLabel label1 = new JLabel("JOUANT AVEC LES MATHS");
+        label1.setFont(new Font("SansSerif", Font.PLAIN, 25));
+        label1.setForeground(new Color(0, 0, 128).darker());
+        label1.setBounds(30, 40, 400, 50);
+        ImageIcon imageIcon2 = new ImageIcon(
+                "C:/Users/Client/jeu/javaa/javaa/ihmproject/src_2/Screenshot_2023-12-23_131102-removebg-preview.png");
+        Image image2 = imageIcon2.getImage();
+        Image resizedImage2 = image2.getScaledInstance(50, 50, Image.SCALE_SMOOTH);
+        ImageIcon resizedImageIcon2 = new ImageIcon(resizedImage2);
+        JLabel label2 = new JLabel(resizedImageIcon2);
+        label2.setBounds(270, 230, 50, 50);
+
+        panel.add(label2);
+        panel.add(label);
+        panel.add(label1);
+        panel.add(b);
+        return panel;
+    }
+
+    private static JPanel createPanel(Color Color, int width, int height) {
+        JPanel panel = new JPanel();
+        panel.setBackground(Color);
+        panel.setPreferredSize(new java.awt.Dimension(width, height));
+        return panel;
+    }
 }
