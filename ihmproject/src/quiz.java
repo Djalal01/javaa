@@ -52,7 +52,7 @@ public class quiz extends JPanel {
             ge.registerFont(playf);
 
             // Initialisation de l'interface
-           JPanel panel = new JPanel();
+            JPanel panel = new JPanel();
             ImageIcon imageIcon = new ImageIcon(quiz.this.getClass().getResource("images/Happy Morning Animation.gif"));
 
             JLabel background = new JLabel(imageIcon);
@@ -69,9 +69,22 @@ public class quiz extends JPanel {
             JPanel startpanel = Creatstart();
 
             panel.setOpaque(false);
+            panel.setLayout(null);
 
-            JButton startButton = new JButton("Facile");
-            JButton startButton2 = new JButton("Difficile");
+            Button startButton = new Button();
+            Button startButton2 = new Button();
+
+            Font playff = Font.createFont(Font.TRUETYPE_FONT, fontFile).deriveFont(21f);
+            Font playfff = playff.deriveFont(Font.BOLD);
+            JLabel labil = new JLabel("!!  CHOISI  LE  NIVEAU  !!");
+            labil.setFont(playfff);
+            labil.setBounds(280, 123, 250, 60);
+            startButton.setText("Facile");
+            startButton.setBounds(320, 200, 160, 60);
+            startButton.setFont(playfff);
+            startButton2.setText("Difficile");
+            startButton2.setBounds(320, 260, 160, 60);
+            startButton2.setFont(playfff);
 
             // button facile
             startButton.addActionListener(new ActionListener() {
@@ -91,28 +104,28 @@ public class quiz extends JPanel {
                     numQuestion = 0;
                     niveau = 2;
 
-                tempsRestantLabel.setText("Temps restant: ");
-                chrono = new Timer(1000, new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        tempsRestant--;
-                        tempsRestantLabel.setText("Temps restant: " + tempsRestant + "s");
-                        if (tempsRestant == 4) {
-                            timer = playSound(
-                                    "Sounds/mixkit-tick-tock-clock-timer-1045.wav",
-                                    timer);
-                        }
-                        if (tempsRestant <= 0) {
-                            resultatLabel.setText("Temps écoulé. La réponse correcte est : " + reponseCorrecte);
-                            stopChrono();
-                            stopSound(timer);
-                            initialiserJeu();
-                        }
+                    tempsRestantLabel.setText("Temps restant: ");
+                    chrono = new Timer(1000, new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            tempsRestant--;
+                            tempsRestantLabel.setText("Temps restant: " + tempsRestant + "s");
+                            if (tempsRestant == 4) {
+                                timer = playSound(
+                                        "Sounds/mixkit-tick-tock-clock-timer-1045.wav",
+                                        timer);
+                            }
+                            if (tempsRestant <= 0) {
+                                resultatLabel.setText("Temps écoulé. La réponse correcte est : " + reponseCorrecte);
+                                stopChrono();
+                                stopSound(timer);
+                                initialiserJeu();
+                            }
 
-                    }
-                });
+                        }
+                    });
 
-            initialiserJeu();
+                    initialiserJeu();
 
                     CardLayout.show(container, "panelall");
 
@@ -125,9 +138,13 @@ public class quiz extends JPanel {
             questionLabel = new JLabel();
             questionLabel.setFont(playf);
             resultatLabel = new JLabel();
+            resultatLabel.setFont(new Font("Comic Sans MS", Font.BOLD, 15));
 
-            scoreLabel = new JLabel("Score: 0");
+            scoreLabel = new JLabel(" Score: 0 ");
+            scoreLabel.setFont(new Font("Comic Sans MS", Font.BOLD, 15));
+
             tempsRestantLabel = new JLabel();
+            tempsRestantLabel.setFont(new Font("Comic Sans MS", Font.BOLD, 15));
             choixButtons = new Button[4];
             fakebuttons = new Button[6];
             for (int i = 0; i < 6; i++) {
@@ -149,7 +166,9 @@ public class quiz extends JPanel {
             // Panel for the top section (Question number, Timer, Score)
 
             topPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-            topPanel.add(new JLabel("Question: " + (numQuestion - 1)));
+            JLabel quest = new JLabel("Question: " + (numQuestion - 1));
+            quest.setFont(new Font("Comic Sans MS", Font.BOLD, 15));
+            topPanel.add(quest);
 
             topPanel.add(scoreLabel);
 
@@ -200,9 +219,10 @@ public class quiz extends JPanel {
             // Panel for the bottom section (Result)
 
             bottomPanel.add(resultatLabel);
+            panel.add(labil);
             panel.add(startButton);
             panel.add(startButton2);
-            container.add(startpanel,"start");
+            container.add(startpanel, "start");
             container.add(panel, "panel");
             container.add(panelall, "panelall");
             container.setOpaque(false);
@@ -210,8 +230,6 @@ public class quiz extends JPanel {
             q.add(container);
 
             // Ajout du label et du chronomètre seulement pour le niveau difficile
-
-           
 
             // Gestionnaire d'événements pour les boutons de choix
             for (int i = 0; i < 4; i++) {
@@ -228,10 +246,8 @@ public class quiz extends JPanel {
 
             choicesPanel.setOpaque(false);
             // Initialisation du jeu
-          
 
             // Affichage de la fenêtre
-         
 
         } catch (IOException | FontFormatException e) {
             e.printStackTrace();
@@ -242,7 +258,8 @@ public class quiz extends JPanel {
         if (niveau == 2) {
 
             topPanel.add(tempsRestantLabel);
-            startChrono();        }
+            startChrono();
+        }
 
         if (numQuestion >= 10) {
             // Afficher un message de fin du jeu
@@ -357,32 +374,60 @@ public class quiz extends JPanel {
 
     private void replay() {
         JPanel replay = new JPanel();
-        JButton replayButton = new JButton("Rejouer");
-        JButton exitButton = new JButton("Quitter");
-        if (score < 5) {
-            JLabel loss = new JLabel("FIN DE JEU VOUS AVEZ PERDU VOTRE SCORE: " + score);
-            replay.add(loss);
+        replay.setBackground(Color.RED.darker());
+        replay.setLayout(null);
+        File fontFile = new File("Fonts/Playtime.otf");
+        try {
+            Font playf = Font.createFont(Font.TRUETYPE_FONT, fontFile).deriveFont(20f);
+            Button replayButton = new Button();
+            replayButton.setText("Rejouer");
 
-        } else {
-            JLabel win = new JLabel("FIN DE JEU VOUS AVEZ GAGNER VOTRE SCORE: " + score);
-            replay.add(win);
+            replayButton.setBackground(new Color(252, 244, 200));
+            replayButton.setFont(new Font("Comic Sans MS", Font.PLAIN, 20));
+            replayButton.setForeground(new Color(114, 69, 45));
+            replayButton.setBounds(220, 300, 150, 60);
+
+            Button exitButton = new Button();
+            exitButton.setText("Quitter");
+            exitButton.setFont(playf);
+
+            exitButton.setBackground(new Color(252, 244, 200));
+            exitButton.setFont(new Font("Comic Sans MS", Font.PLAIN, 20));
+            exitButton.setForeground(new Color(114, 69, 45));
+            exitButton.setBounds(400, 300, 150, 60);
+            if (score < 5) {
+                JLabel loss = new JLabel("FIN DE JEU VOUS AVEZ PERDU VOTRE SCORE: " + score);
+                loss.setFont(new Font("Comic Sans MS", Font.BOLD, 20));
+                loss.setForeground(Color.WHITE);
+                loss.setBounds(150, 0, 600, 500);
+                replay.add(loss);
+
+            } else {
+                JLabel win = new JLabel("FIN DE JEU VOUS AVEZ GAGNER VOTRE SCORE: " + score);
+                win.setFont(new Font("Comic Sans MS", Font.BOLD, 20));
+                win.setForeground(Color.WHITE);
+                win.setBounds(150, 0, 600, 500);
+                replay.add(win);
+            }
+            replay.add(replayButton);
+            replay.add(exitButton);
+            container.add(replay, "replay");
+            CardLayout.show(container, "replay");
+
+            replayButton.addActionListener(e -> {
+                CardLayout.show(container, "panel");
+                score = 0;
+                numQuestion = 1;
+                initialiserJeu();
+
+            });
+            exitButton.addActionListener(e -> {
+                System.exit(0);
+            });
+
+        } catch (IOException | FontFormatException e) {
+            e.printStackTrace();
         }
-        replay.add(replayButton);
-        replay.add(exitButton);
-        container.add(replay, "replay");
-        CardLayout.show(container, "replay");
-
-        replayButton.addActionListener(e -> {
-            CardLayout.show(container, "panel");
-            score = 0;
-            numQuestion = 1;
-            initialiserJeu();
-
-        });
-        exitButton.addActionListener(e -> {
-            System.exit(0);
-        });
-
     }
 
     public static Clip playSound(String soundFilePath, Clip sd) {
@@ -418,9 +463,9 @@ public class quiz extends JPanel {
         southPanel.setLayout(new FlowLayout());
         eastPanel.setLayout(new FlowLayout());
         westPanel.setLayout(new FlowLayout());
-        JLabel labil = new JLabel("bienvenue dans le jeu");
-        labil.setFont(new Font("SansSerif", Font.PLAIN, 30));
-        labil.setForeground(new Color(0, 0, 128).darker());
+        JLabel labil = new JLabel("BIENVENUE DANS LE JEU");
+        labil.setFont(new Font("Comic Sans MS", Font.PLAIN, 30));
+        labil.setForeground(Color.WHITE);
         labil.setHorizontalAlignment(0);
         northPanel.add(labil);
         // dessin du bas
@@ -461,6 +506,7 @@ public class quiz extends JPanel {
         JPanel panel = new JPanel();
         panel.setLayout(null);
         panel.setBackground(Color.red.darker());
+
         ImageIcon imageIcon = new ImageIcon(
                 "pic/Screenshot_2023-12-23_131722-removebg-preview.png");
         Image image = imageIcon.getImage();
@@ -469,24 +515,24 @@ public class quiz extends JPanel {
 
         Button b = new Button();
 
-        b.setBounds(120, 200, 150, 50);
-        b.setBackground(new Color(255, 182, 193));
-        b.setFont(new Font("SansSerif", Font.PLAIN, 20));
-        b.setForeground(Color.RED.darker());
+        b.setText("Commencer");
+        b.setBounds(100, 200, 200, 50);
+        b.setBackground(new Color(252, 244, 200));
+        b.setFont(new Font("Comic Sans MS", Font.BOLD, 20));
+        b.setForeground(new Color(114, 69, 45));
         b.setOpaque(true);
         b.setAlignmentX(0);
 
         b.setMargin(new Insets(10, 0, 0, 10));
-        Border roundBorder = BorderFactory.createLineBorder(Color.black, 2, true);
-        b.setBorder(roundBorder);
+
         b.addActionListener(e -> {
             CardLayout.show(container, "panel");
         });
         JLabel label = new JLabel(resizedImageIcon);
         label.setBounds(65, 180, 50, 50);
         JLabel label1 = new JLabel("JOUANT AVEC LES MATHS");
-        label1.setFont(new Font("SansSerif", Font.PLAIN, 25));
-        label1.setForeground(new Color(0, 0, 128).darker());
+        label1.setFont(new Font("Comic Sans MS", Font.BOLD, 25));
+        label1.setForeground(Color.white);
         label1.setBounds(30, 40, 400, 50);
         ImageIcon imageIcon2 = new ImageIcon(
                 "pic/Screenshot_2023-12-23_131102-removebg-preview.png");
