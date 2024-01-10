@@ -425,21 +425,21 @@ public class quiz extends JPanel {
         northPanel.add(labil);
         // dessin du bas
         ImageIcon imageIcon2 = new ImageIcon(
-                "C:/Users/Client/jeu/javaa/javaa/ihmproject/src_2/Symmetry-removebg-preview.png");
+                "pic/Symmetry-removebg-preview.png");
         Image image2 = imageIcon2.getImage();
-        Image resizedImage2 = image2.getScaledInstance(250, 150, Image.SCALE_SMOOTH);
+        Image resizedImage2 = image2.getScaledInstance(200, 120, Image.SCALE_SMOOTH);
         ImageIcon resizedImageIcon2 = new ImageIcon(resizedImage2);
         JLabel label2 = new JLabel(resizedImageIcon2);
         // dessin du droite
         ImageIcon imageIcon = new ImageIcon(
-                "C:/Users/Client/jeu/javaa/javaa/ihmproject/src_2/pngegg.png");
+                "pic/pngegg.png");
         Image image = imageIcon.getImage();
         Image resizedImage = image.getScaledInstance(190, 300, Image.SCALE_SMOOTH);
         ImageIcon resizedImageIcon = new ImageIcon(resizedImage);
         JLabel label = new JLabel(resizedImageIcon);
         // dessin du gauche
         ImageIcon imageIcon3 = new ImageIcon(
-                "C:/Users/Client/jeu/javaa/javaa/ihmproject/src_2/pngegg (1).png");
+                "pic/pngegg (1).png");
         Image image3 = imageIcon3.getImage();
         Image resizedImage3 = image3.getScaledInstance(150, 160, Image.SCALE_SMOOTH);
         ImageIcon resizedImageIcon3 = new ImageIcon(resizedImage3);
@@ -462,7 +462,7 @@ public class quiz extends JPanel {
         panel.setLayout(null);
         panel.setBackground(Color.red.darker());
         ImageIcon imageIcon = new ImageIcon(
-                "C:/Users/Client/jeu/javaa/javaa/ihmproject/src_2/Screenshot_2023-12-23_131722-removebg-preview.png");
+                "pic/Screenshot_2023-12-23_131722-removebg-preview.png");
         Image image = imageIcon.getImage();
         Image resizedImage = image.getScaledInstance(50, 50, Image.SCALE_SMOOTH);
         ImageIcon resizedImageIcon = new ImageIcon(resizedImage);
@@ -489,7 +489,7 @@ public class quiz extends JPanel {
         label1.setForeground(new Color(0, 0, 128).darker());
         label1.setBounds(30, 40, 400, 50);
         ImageIcon imageIcon2 = new ImageIcon(
-                "C:/Users/Client/jeu/javaa/javaa/ihmproject/src_2/Screenshot_2023-12-23_131102-removebg-preview.png");
+                "pic/Screenshot_2023-12-23_131102-removebg-preview.png");
         Image image2 = imageIcon2.getImage();
         Image resizedImage2 = image2.getScaledInstance(50, 50, Image.SCALE_SMOOTH);
         ImageIcon resizedImageIcon2 = new ImageIcon(resizedImage2);
