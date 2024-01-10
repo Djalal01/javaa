@@ -91,7 +91,28 @@ public class quiz extends JPanel {
                     numQuestion = 0;
                     niveau = 2;
 
-                    initialiserJeu();
+                tempsRestantLabel.setText("Temps restant: ");
+                chrono = new Timer(1000, new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        tempsRestant--;
+                        tempsRestantLabel.setText("Temps restant: " + tempsRestant + "s");
+                        if (tempsRestant == 4) {
+                            timer = playSound(
+                                    "Sounds/mixkit-tick-tock-clock-timer-1045.wav",
+                                    timer);
+                        }
+                        if (tempsRestant <= 0) {
+                            resultatLabel.setText("Temps écoulé. La réponse correcte est : " + reponseCorrecte);
+                            stopChrono();
+                            stopSound(timer);
+                            initialiserJeu();
+                        }
+
+                    }
+                });
+
+            initialiserJeu();
 
                     CardLayout.show(container, "panelall");
 
@@ -190,29 +211,7 @@ public class quiz extends JPanel {
 
             // Ajout du label et du chronomètre seulement pour le niveau difficile
 
-            if (niveau == 2) {
-                tempsRestantLabel.setText("Temps restant: ");
-                chrono = new Timer(1000, new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        tempsRestant--;
-                        tempsRestantLabel.setText("Temps restant: " + tempsRestant + "s");
-                        if (tempsRestant == 4) {
-                            timer = playSound(
-                                    "Sounds/mixkit-tick-tock-clock-timer-1045.wav",
-                                    timer);
-                        }
-                        if (tempsRestant <= 0) {
-                            resultatLabel.setText("Temps écoulé. La réponse correcte est : " + reponseCorrecte);
-                            stopChrono();
-                            stopSound(timer);
-                            initialiserJeu();
-                        }
-
-                    }
-                });
-
-            }
+           
 
             // Gestionnaire d'événements pour les boutons de choix
             for (int i = 0; i < 4; i++) {
@@ -229,13 +228,10 @@ public class quiz extends JPanel {
 
             choicesPanel.setOpaque(false);
             // Initialisation du jeu
-            initialiserJeu();
+          
 
             // Affichage de la fenêtre
-            q.pack();
-            q.setLocationRelativeTo(null); // Center the frame on the screen
-
-            q.setVisible(true);
+         
 
         } catch (IOException | FontFormatException e) {
             e.printStackTrace();
@@ -246,7 +242,7 @@ public class quiz extends JPanel {
         if (niveau == 2) {
 
             topPanel.add(tempsRestantLabel);
-        }
+            startChrono();        }
 
         if (numQuestion >= 10) {
             // Afficher un message de fin du jeu
@@ -471,7 +467,7 @@ public class quiz extends JPanel {
         Image resizedImage = image.getScaledInstance(50, 50, Image.SCALE_SMOOTH);
         ImageIcon resizedImageIcon = new ImageIcon(resizedImage);
 
-        JButton b = new JButton("START!!");
+        Button b = new Button();
 
         b.setBounds(120, 200, 150, 50);
         b.setBackground(new Color(255, 182, 193));
