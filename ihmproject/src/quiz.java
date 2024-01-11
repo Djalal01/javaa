@@ -38,6 +38,7 @@ public class quiz extends JPanel {
     private static JPanel container = new JPanel(CardLayout);
     boolean isButtonOneClicked = false;
     String[] niveaux = { "Facile", "Difficile" };
+    boolean ingame;
 
     public quiz(String titre) {
 
@@ -101,6 +102,7 @@ public class quiz extends JPanel {
                 public void actionPerformed(ActionEvent e) {
                     numQuestion = 0;
                     niveau = 2;
+                    ingame = true;
                     if (!isButtonOneClicked) {
                         tempsRestantLabel.setText("Temps restant: ");
                         chrono = new Timer(1000, new ActionListener() {
@@ -108,7 +110,7 @@ public class quiz extends JPanel {
                             public void actionPerformed(ActionEvent e) {
                                 tempsRestant--;
                                 tempsRestantLabel.setText("Temps restant: " + tempsRestant + "s");
-                                if (numQuestion <= 10) {
+                                if (numQuestion <= 10 && ingame) {
 
                                     if (tempsRestant == 4) {
                                         timer = playSound(
@@ -424,7 +426,7 @@ public class quiz extends JPanel {
                 CardLayout.show(container, "panel");
                 score = 0;
                 numQuestion = 1;
-
+                ingame = false;
                 initialiserJeu();
 
             });
