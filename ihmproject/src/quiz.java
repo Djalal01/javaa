@@ -2,8 +2,6 @@
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.swing.*;
-import javax.swing.border.Border;
-
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -27,7 +25,7 @@ public class quiz extends JPanel {
     JFRAME q = new JFRAME();
     private Button[] choixButtons, fakebuttons;
     private int niveau;
-    private int play;
+   
     private int score;
     private int nombre1, nombre2, reponseCorrecte;
     private char operateur;
@@ -38,7 +36,7 @@ public class quiz extends JPanel {
     public Clip timer, error, correct;
     private static CardLayout CardLayout = new CardLayout();
     private static JPanel container = new JPanel(CardLayout);
-
+ boolean isButtonOneClicked=false;
     String[] niveaux = { "Facile", "Difficile" };
 
     public quiz(String titre) {
@@ -86,6 +84,15 @@ public class quiz extends JPanel {
             startButton2.setBounds(320, 260, 160, 60);
             startButton2.setFont(playfff);
 
+
+
+
+           
+           
+         
+
+
+
             // button facile
             startButton.addActionListener(new ActionListener() {
                 @Override
@@ -103,13 +110,16 @@ public class quiz extends JPanel {
                 public void actionPerformed(ActionEvent e) {
                     numQuestion = 0;
                     niveau = 2;
-
+if (!isButtonOneClicked){
                     tempsRestantLabel.setText("Temps restant: ");
                     chrono = new Timer(1000, new ActionListener() {
                         @Override
                         public void actionPerformed(ActionEvent e) {
                             tempsRestant--;
                             tempsRestantLabel.setText("Temps restant: " + tempsRestant + "s");
+                            if (numQuestion<=10) {
+                             
+                            
                             if (tempsRestant == 4) {
                                 timer = playSound(
                                         "Sounds/mixkit-tick-tock-clock-timer-1045.wav",
@@ -121,14 +131,18 @@ public class quiz extends JPanel {
                                 stopSound(timer);
                                 initialiserJeu();
                             }
-
+                        }
                         }
                     });
-
+                }
                     initialiserJeu();
 
                     CardLayout.show(container, "panelall");
-
+ startButton2.addActionListener(new ActionListener(){  
+               public void actionPerformed(ActionEvent e){ 
+                    isButtonOneClicked=true;
+              }  
+            });
                 }
 
             });
@@ -373,10 +387,13 @@ public class quiz extends JPanel {
     }
 
     private void replay() {
-        JPanel replay = new JPanel();
-        replay.setBackground(Color.RED.darker());
+        Panel replay = new Panel();
+        
         replay.setLayout(null);
         File fontFile = new File("Fonts/Playtime.otf");
+      
+                    
+
         try {
             Font playf = Font.createFont(Font.TRUETYPE_FONT, fontFile).deriveFont(20f);
             Button replayButton = new Button();
@@ -418,8 +435,10 @@ public class quiz extends JPanel {
                 CardLayout.show(container, "panel");
                 score = 0;
                 numQuestion = 1;
+          
                 initialiserJeu();
-
+                
+                
             });
             exitButton.addActionListener(e -> {
                 System.exit(0);
@@ -555,4 +574,5 @@ public class quiz extends JPanel {
         panel.setPreferredSize(new java.awt.Dimension(width, height));
         return panel;
     }
+   
 }
