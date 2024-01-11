@@ -25,7 +25,7 @@ public class quiz extends JPanel {
     JFRAME q = new JFRAME();
     private Button[] choixButtons, fakebuttons;
     private int niveau;
-   
+
     private int score;
     private int nombre1, nombre2, reponseCorrecte;
     private char operateur;
@@ -36,7 +36,7 @@ public class quiz extends JPanel {
     public Clip timer, error, correct;
     private static CardLayout CardLayout = new CardLayout();
     private static JPanel container = new JPanel(CardLayout);
- boolean isButtonOneClicked=false;
+    boolean isButtonOneClicked = false;
     String[] niveaux = { "Facile", "Difficile" };
 
     public quiz(String titre) {
@@ -84,15 +84,6 @@ public class quiz extends JPanel {
             startButton2.setBounds(320, 260, 160, 60);
             startButton2.setFont(playfff);
 
-
-
-
-           
-           
-         
-
-
-
             // button facile
             startButton.addActionListener(new ActionListener() {
                 @Override
@@ -110,39 +101,39 @@ public class quiz extends JPanel {
                 public void actionPerformed(ActionEvent e) {
                     numQuestion = 0;
                     niveau = 2;
-if (!isButtonOneClicked){
-                    tempsRestantLabel.setText("Temps restant: ");
-                    chrono = new Timer(1000, new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            tempsRestant--;
-                            tempsRestantLabel.setText("Temps restant: " + tempsRestant + "s");
-                            if (numQuestion<=10) {
-                             
-                            
-                            if (tempsRestant == 4) {
-                                timer = playSound(
-                                        "Sounds/mixkit-tick-tock-clock-timer-1045.wav",
-                                        timer);
+                    if (!isButtonOneClicked) {
+                        tempsRestantLabel.setText("Temps restant: ");
+                        chrono = new Timer(1000, new ActionListener() {
+                            @Override
+                            public void actionPerformed(ActionEvent e) {
+                                tempsRestant--;
+                                tempsRestantLabel.setText("Temps restant: " + tempsRestant + "s");
+                                if (numQuestion <= 10) {
+
+                                    if (tempsRestant == 4) {
+                                        timer = playSound(
+                                                "Sounds/mixkit-tick-tock-clock-timer-1045.wav",
+                                                timer);
+                                    }
+                                    if (tempsRestant <= 0) {
+                                        resultatLabel
+                                                .setText("Temps écoulé. La réponse correcte est : " + reponseCorrecte);
+                                        stopChrono();
+                                        stopSound(timer);
+                                        initialiserJeu();
+                                    }
+                                }
                             }
-                            if (tempsRestant <= 0) {
-                                resultatLabel.setText("Temps écoulé. La réponse correcte est : " + reponseCorrecte);
-                                stopChrono();
-                                stopSound(timer);
-                                initialiserJeu();
-                            }
-                        }
-                        }
-                    });
-                }
+                        });
+                    }
                     initialiserJeu();
 
                     CardLayout.show(container, "panelall");
- startButton2.addActionListener(new ActionListener(){  
-               public void actionPerformed(ActionEvent e){ 
-                    isButtonOneClicked=true;
-              }  
-            });
+                    startButton2.addActionListener(new ActionListener() {
+                        public void actionPerformed(ActionEvent e) {
+                            isButtonOneClicked = true;
+                        }
+                    });
                 }
 
             });
@@ -388,11 +379,9 @@ if (!isButtonOneClicked){
 
     private void replay() {
         Panel replay = new Panel();
-        
+
         replay.setLayout(null);
         File fontFile = new File("Fonts/Playtime.otf");
-      
-                    
 
         try {
             Font playf = Font.createFont(Font.TRUETYPE_FONT, fontFile).deriveFont(20f);
@@ -415,14 +404,14 @@ if (!isButtonOneClicked){
             if (score < 5) {
                 JLabel loss = new JLabel("FIN DE JEU VOUS AVEZ PERDU VOTRE SCORE: " + score);
                 loss.setFont(new Font("Comic Sans MS", Font.BOLD, 20));
-                loss.setForeground(Color.WHITE);
+                loss.setForeground(Color.BLACK);
                 loss.setBounds(150, 0, 600, 500);
                 replay.add(loss);
 
             } else {
                 JLabel win = new JLabel("FIN DE JEU VOUS AVEZ GAGNER VOTRE SCORE: " + score);
                 win.setFont(new Font("Comic Sans MS", Font.BOLD, 20));
-                win.setForeground(Color.WHITE);
+                win.setForeground(Color.BLACK);
                 win.setBounds(150, 0, 600, 500);
                 replay.add(win);
             }
@@ -435,10 +424,9 @@ if (!isButtonOneClicked){
                 CardLayout.show(container, "panel");
                 score = 0;
                 numQuestion = 1;
-          
+
                 initialiserJeu();
-                
-                
+
             });
             exitButton.addActionListener(e -> {
                 System.exit(0);
@@ -471,61 +459,8 @@ if (!isButtonOneClicked){
     public JPanel Creatstart() {
 
         JPanel firstJPanel = new JPanel(new CardLayout());
-        JPanel p = new JPanel(new BorderLayout());
-
-        firstJPanel.add(p);
-
-        JPanel northPanel = createPanel(Color.RED.darker(), 100, 50);
-        JPanel southPanel = createPanel(Color.RED.darker(), 300, 170);
-        JPanel eastPanel = createPanel(Color.RED.darker(), 200, 400);
-        JPanel westPanel = createPanel(Color.RED.darker(), 200, 400);
-        southPanel.setLayout(new FlowLayout());
-        eastPanel.setLayout(new FlowLayout());
-        westPanel.setLayout(new FlowLayout());
-        JLabel labil = new JLabel("BIENVENUE DANS LE JEU");
-        labil.setFont(new Font("Comic Sans MS", Font.PLAIN, 30));
-        labil.setForeground(Color.WHITE);
-        labil.setHorizontalAlignment(0);
-        northPanel.add(labil);
-        // dessin du bas
-        ImageIcon imageIcon2 = new ImageIcon(
-                "pic/Symmetry-removebg-preview.png");
-        Image image2 = imageIcon2.getImage();
-        Image resizedImage2 = image2.getScaledInstance(200, 120, Image.SCALE_SMOOTH);
-        ImageIcon resizedImageIcon2 = new ImageIcon(resizedImage2);
-        JLabel label2 = new JLabel(resizedImageIcon2);
-        // dessin du droite
-        ImageIcon imageIcon = new ImageIcon(
-                "pic/pngegg.png");
-        Image image = imageIcon.getImage();
-        Image resizedImage = image.getScaledInstance(190, 300, Image.SCALE_SMOOTH);
-        ImageIcon resizedImageIcon = new ImageIcon(resizedImage);
-        JLabel label = new JLabel(resizedImageIcon);
-        // dessin du gauche
-        ImageIcon imageIcon3 = new ImageIcon(
-                "pic/pngegg (1).png");
-        Image image3 = imageIcon3.getImage();
-        Image resizedImage3 = image3.getScaledInstance(150, 160, Image.SCALE_SMOOTH);
-        ImageIcon resizedImageIcon3 = new ImageIcon(resizedImage3);
-        JLabel label3 = new JLabel(resizedImageIcon3);
-        westPanel.add(label3);
-        eastPanel.add(label);
-        southPanel.add(label2);
-
-        p.add(northPanel, BorderLayout.NORTH);
-        p.add(southPanel, BorderLayout.SOUTH);
-        p.add(eastPanel, BorderLayout.EAST);
-        p.add(westPanel, BorderLayout.WEST);
-        p.add(createCentrPanel(), BorderLayout.CENTER);
-        return p;
-
-    }
-
-    public static JPanel createCentrPanel() {
-        JPanel panel = new JPanel();
-        panel.setLayout(null);
-        panel.setBackground(Color.red.darker());
-
+        Panel2 p = new Panel2();
+        p.setLayout(null);
         ImageIcon imageIcon = new ImageIcon(
                 "pic/Screenshot_2023-12-23_131722-removebg-preview.png");
         Image image = imageIcon.getImage();
@@ -535,44 +470,48 @@ if (!isButtonOneClicked){
         Button b = new Button();
 
         b.setText("Commencer");
-        b.setBounds(100, 200, 200, 50);
+        b.setBounds(300, 220, 200, 70);
         b.setBackground(new Color(252, 244, 200));
         b.setFont(new Font("Comic Sans MS", Font.BOLD, 20));
         b.setForeground(new Color(114, 69, 45));
-        b.setOpaque(true);
-        b.setAlignmentX(0);
-
-        b.setMargin(new Insets(10, 0, 0, 10));
 
         b.addActionListener(e -> {
             CardLayout.show(container, "panel");
         });
         JLabel label = new JLabel(resizedImageIcon);
-        label.setBounds(65, 180, 50, 50);
+        label.setBounds(284, 190, 50, 50);
         JLabel label1 = new JLabel("JOUANT AVEC LES MATHS");
         label1.setFont(new Font("Comic Sans MS", Font.BOLD, 25));
-        label1.setForeground(Color.white);
-        label1.setBounds(30, 40, 400, 50);
+        label1.setForeground(Color.BLACK);
+        label1.setBounds(230, 45, 400, 50);
         ImageIcon imageIcon2 = new ImageIcon(
                 "pic/Screenshot_2023-12-23_131102-removebg-preview.png");
         Image image2 = imageIcon2.getImage();
         Image resizedImage2 = image2.getScaledInstance(50, 50, Image.SCALE_SMOOTH);
         ImageIcon resizedImageIcon2 = new ImageIcon(resizedImage2);
         JLabel label2 = new JLabel(resizedImageIcon2);
-        label2.setBounds(270, 230, 50, 50);
+        label2.setBounds(470, 250, 50, 50);
 
-        panel.add(label2);
-        panel.add(label);
-        panel.add(label1);
-        panel.add(b);
-        return panel;
+        p.add(label2);
+        p.add(label);
+        p.add(label1);
+        p.add(b);
+
+        firstJPanel.add(p);
+
+        String labelText = "<html>Credit:<br>"
+                + "-Djemaoui Ahmed SI G2<br>"
+                + "-Djelal Aymen SI G2<br>"
+                + "-Lina Manel Nouasri SI G3<br>"
+                + "-kahina Bahia Lakrem SI G3<br>"
+                + "-Benkadi Farouk Abdelhamid  ISIL G3 </html>";
+        JLabel CRIDIT = new JLabel(labelText);
+        CRIDIT.setFont(new Font("Comic Sans MS", Font.BOLD, 15));
+        CRIDIT.setBounds(10, 370, 220, 200);
+        p.add(CRIDIT);
+
+        return firstJPanel;
+
     }
 
-    private static JPanel createPanel(Color Color, int width, int height) {
-        JPanel panel = new JPanel();
-        panel.setBackground(Color);
-        panel.setPreferredSize(new java.awt.Dimension(width, height));
-        return panel;
-    }
-   
 }
