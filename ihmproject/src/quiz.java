@@ -38,6 +38,7 @@ public class quiz extends JPanel {
     private static JPanel container = new JPanel(CardLayout);
  boolean isButtonOneClicked=false;
     String[] niveaux = { "Facile", "Difficile" };
+    boolean ingame = false ; 
 
     public quiz(String titre) {
 
@@ -110,28 +111,33 @@ public class quiz extends JPanel {
                 public void actionPerformed(ActionEvent e) {
                     numQuestion = 0;
                     niveau = 2;
+                    ingame = true ; 
 if (!isButtonOneClicked){
+                        
                     tempsRestantLabel.setText("Temps restant: ");
                     chrono = new Timer(1000, new ActionListener() {
                         @Override
                         public void actionPerformed(ActionEvent e) {
                             tempsRestant--;
                             tempsRestantLabel.setText("Temps restant: " + tempsRestant + "s");
-                            if (numQuestion<=10) {
+                            if (numQuestion<=10 && ingame) {
                              
                             
                             if (tempsRestant == 4) {
                                 timer = playSound(
                                         "Sounds/mixkit-tick-tock-clock-timer-1045.wav",
-                                        timer);
+                                        timer); 
+
                             }
-                            if (tempsRestant <= 0) {
+                            else if (tempsRestant <= 0) {
                                 resultatLabel.setText("Temps écoulé. La réponse correcte est : " + reponseCorrecte);
                                 stopChrono();
                                 stopSound(timer);
                                 initialiserJeu();
                             }
+                          
                         }
+                        
                         }
                     });
                 }
@@ -269,6 +275,7 @@ if (!isButtonOneClicked){
     }
 
     public void initialiserJeu() {
+        
         if (niveau == 2) {
 
             topPanel.add(tempsRestantLabel);
@@ -435,9 +442,10 @@ if (!isButtonOneClicked){
                 CardLayout.show(container, "panel");
                 score = 0;
                 numQuestion = 1;
-          
+       ingame = false ; 
                 initialiserJeu();
                 
+               
                 
             });
             exitButton.addActionListener(e -> {
@@ -536,7 +544,6 @@ if (!isButtonOneClicked){
 
         b.setText("Commencer");
         b.setBounds(100, 200, 200, 50);
-        b.setBackground(new Color(252, 244, 200));
         b.setFont(new Font("Comic Sans MS", Font.BOLD, 20));
         b.setForeground(new Color(114, 69, 45));
         b.setOpaque(true);

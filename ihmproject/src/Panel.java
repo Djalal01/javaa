@@ -36,7 +36,7 @@ public class Panel extends JPanel {
     
  public Panel() {
   try {                
-     image = resize(ImageIO.read(new File("/home/djalal/Desktop/javaa/ihmproject/src/images/7895078.jpg")),800,600);
+     image = resize(ImageIO.read(new File("images/7895078.jpg")),800,600);
      
   } catch (IOException ex) {
        // handle exception...
